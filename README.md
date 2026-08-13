@@ -6,7 +6,6 @@ A pixel-art desktop music player built with Electron, Vite, and React — a smal
 > and to her [cupid-music-player](https://github.com/cupidbity/cupid-music-player), the project this is based on.
 > Thank you, Cupidity, for creating such a beautiful little player! 🎶
 >
-> `#cupidbity` `#Cupidity` `#cupidmusicplayer` `#pixelart` `#lorysmusic` `#madebyme`
 
 ## Features
 
