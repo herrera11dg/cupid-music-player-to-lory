@@ -1,6 +1,6 @@
 # YouTube Integration Setup
 
-Cupid Player supports two YouTube paths:
+Lory's Music supports two YouTube paths:
 
 1. **Public playlist URLs** — paste any YouTube playlist link. **No sign-in, no API key, no subscription.** This works out of the box with no setup at all.
 2. **Your own playlists** — sign in with Google so the app can list the playlists on your account. Free quota via the YouTube Data API. **No YouTube Premium required**, on your account or the developer account.
@@ -11,7 +11,7 @@ Audio in both modes streams via yt-dlp (the same path used for Spotify and Apple
 
 ## 1. Public playlist URLs — zero setup
 
-Open Cupid Player, click the settings icon, pick **youtube** from the music dropdown, and paste a playlist URL into the box. Hit `load playlist`. That's it.
+Open Lory's Music, click the settings icon, pick **youtube** from the music dropdown, and paste a playlist URL into the box. Hit `load playlist`. That's it.
 
 Recognised formats:
 - `https://www.youtube.com/playlist?list=PL...`
@@ -37,7 +37,7 @@ This needs a one-time setup of a Google OAuth client. **It's free** — YouTube 
    - **Test users: add the Google account you'll sign in with.** Apps in "Testing" status only allow listed test users — sign-in attempts from any other account get rejected with `Error 403: access_denied`. This is the most common setup snag.
 5. In **APIs & Services > Credentials**, click **Create Credentials > OAuth client ID**:
    - Application type: **Desktop app**
-   - Name: anything (e.g. "Cupid Player")
+   - Name: anything (e.g. "Lory's Music")
 6. Copy the **Client ID** and **Client secret** from the dialog.
 
 > **About the client secret:** Google issues one even for Desktop app clients. It's not actually confidential — Google's own [native-app guidance](https://developers.google.com/identity/protocols/oauth2/native-app) explains that the secret is bundled in installed apps and PKCE is what protects the flow. It's safe to put in your local `.env`.

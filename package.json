@@ -1,5 +1,5 @@
 {
-  "name": "cupid-player",
+  "name": "lorys-music",
   "version": "0.0.0",
   "private": true,
   "description": "A desktop media player",
@@ -38,8 +38,8 @@
     "wait-on": "^8.0.1"
   },
   "build": {
-    "appId": "com.codedbycupidity.cupid-player",
-    "productName": "Cupid Player",
+    "appId": "com.codedbycupidity.lorys-music",
+    "productName": "Lory's Music",
     "files": [
       "dist/**/*",
       "electron/**/*",

@@ -70,9 +70,9 @@ The local playlist is driven by a single file, `playlist.json`, that lives next 
 ### Where the audio folder lives
 
 - **Running from source (dev):** `audio/` in the project root.
-- **Installed app (macOS):** `~/Library/Application Support/Cupid Player/audio/`
-- **Installed app (Windows):** `%APPDATA%\Cupid Player\audio\`
-- **Installed app (Linux):** `~/.config/Cupid Player/audio/`
+- **Installed app (macOS):** `~/Library/Application Support/Lory's Music/audio/`
+- **Installed app (Windows):** `%APPDATA%\Lory's Music\audio\`
+- **Installed app (Linux):** `~/.config/Lory's Music/audio/`
 
 On first launch, the installed app seeds this folder with the bundled defaults. After that it's yours to edit — the app never overwrites it.
 
@@ -155,10 +155,10 @@ npm run package
 
 **macOS:**
 ```bash
-cp -r "out/mac-arm64/Cupid Player.app" /Applications/
+cp -r "out/mac-arm64/Lory's Music.app" /Applications/
 ```
 
-**Windows:** Run the installer from `out/Cupid Player Setup.exe`. If `npm run package` fails at the NSIS step with "Cannot create symbolic link," enable **Developer Mode** in Settings → System → For developers, then re-run. The unpacked app at `out/win-unpacked/Cupid Player.exe` is fully runnable in the meantime — no installer required.
+**Windows:** Run the installer from `out/Lory's Music Setup.exe`. If `npm run package` fails at the NSIS step with "Cannot create symbolic link," enable **Developer Mode** in Settings → System → For developers, then re-run. The unpacked app at `out/win-unpacked/Lory's Music.exe` is fully runnable in the meantime — no installer required.
 
 **Linux:** Run the AppImage from `out/`.
 

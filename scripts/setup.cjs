@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * One-command setup for cupid player.
+ * One-command setup for Lory's Music.
  *
  *   npm run setup
  *
@@ -289,7 +289,7 @@ function repairYtDlp() {
 
 // --- go ---------------------------------------------------------------------
 async function main() {
-  console.log(`${c.bold}cupid player — setup${c.reset}`);
+  console.log(`${c.bold}Lory's Music — setup${c.reset}`);
   checkNode();
   installDeps();
   await repairElectron();

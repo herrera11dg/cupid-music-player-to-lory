@@ -163,6 +163,128 @@ function PlaylistList({ loading, playlists, loadingPlaylist, onSelect, emptyMess
   );
 }
 
+function RainBackground({ intensity = 1, flash = false }) {
+  const canvasRef = useRef(null);
+  const intensityRef = useRef(intensity);
+  intensityRef.current = intensity;
+  const flashUntilRef = useRef(0);
+
+  useEffect(() => {
+    if (flash) {
+      flashUntilRef.current = performance.now() + 120;
+    }
+  }, [flash]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    let raf;
+    let drops = [];
+    const DPR = window.devicePixelRatio || 1;
+
+    const createDrop = (w, h, anywhere) => ({
+      x: Math.random() * w,
+      y: anywhere ? Math.random() * h : -Math.random() * 100,
+      len: 12 + Math.random() * 16,
+      speed: 14 + Math.random() * 12,
+      opacity: 0.35 + Math.random() * 0.5,
+    });
+
+    const initDrops = () => {
+      const { width } = canvas.getBoundingClientRect();
+      const height = width * (674 / 415);
+      const count = Math.max(40, Math.floor((width * height) / 5000));
+      drops = Array.from({ length: count }, () => createDrop(width, height, true));
+    };
+
+    const resize = () => {
+      const { width } = canvas.getBoundingClientRect();
+      canvas.width = width * DPR;
+      canvas.height = width * (674 / 415) * DPR;
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      initDrops();
+    };
+
+    const tick = () => {
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      ctx.clearRect(0, 0, w, h);
+
+      const flashing = performance.now() < flashUntilRef.current;
+      if (flashing) {
+        ctx.fillStyle = 'rgba(210, 225, 255, 0.22)';
+        ctx.fillRect(0, 0, w, h);
+      }
+
+      const speedMul = 0.6 + intensityRef.current * 1.1;
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = 'rgba(170, 200, 240, 0.7)';
+      ctx.beginPath();
+      for (let i = 0; i < drops.length; i++) {
+        const d = drops[i];
+        d.y += d.speed * speedMul;
+        d.x -= d.speed * speedMul * 0.35;
+        if (d.y > h + 20) {
+          drops[i] = createDrop(w, h, false);
+          continue;
+        }
+        ctx.globalAlpha = d.opacity;
+        ctx.moveTo(d.x, d.y);
+        ctx.lineTo(d.x + 2, d.y + d.len);
+      }
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+      raf = requestAnimationFrame(tick);
+    };
+
+    resize();
+    raf = requestAnimationFrame(tick);
+    window.addEventListener('resize', resize);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', resize);
+    };
+  }, []);
+
+  return <canvas className="rain-layer" ref={canvasRef} aria-hidden="true" />;
+}
+
+function usePulsingGlow(isPlaying, volume) {
+  const [pulse, setPulse] = useState(0);
+  useEffect(() => {
+    if (!isPlaying) {
+      setPulse(0);
+      return;
+    }
+    const interval = setInterval(() => {
+      setPulse((p) => (p + 1) % 2);
+    }, Math.max(240, 480 - Math.round(volume * 220)));
+    return () => clearInterval(interval);
+  }, [isPlaying, volume]);
+  return pulse;
+}
+
+function FloatingHearts({ hearts }) {
+  if (hearts.length === 0) return null;
+  return (
+    <div className="hearts-layer" aria-hidden="true">
+      {hearts.map((h) => (
+        <span
+          key={h.id}
+          className={`floating-heart ${h.big ? 'big' : ''}`}
+          style={{
+            left: `${h.x}%`,
+            animationDuration: `${h.dur}s`,
+            animationDelay: `${h.delay}s`,
+          }}
+        >
+          ❤
+        </span>
+      ))}
+    </div>
+  );
+}
+
 function MarqueeText({ className, text }) {
   const outerRef = useRef(null);
   const textRef = useRef(null);
@@ -217,6 +339,28 @@ export default function App() {
   const volumeBarRef = useRef(null);
   const [showDebug] = useState(false);
   const [localTracks, setLocalTracks] = useState([]);
+  const [welcomeVisible, setWelcomeVisible] = useState(true);
+  const [hearts, setHearts] = useState([]);
+
+  useEffect(() => {
+    const t = setTimeout(() => setWelcomeVisible(false), 4200);
+    return () => clearTimeout(t);
+  }, []);
+
+  const spawnHearts = useCallback(() => {
+    const id = Date.now();
+    const batch = Array.from({ length: 7 }, (_, i) => ({
+      id: `${id}-${i}`,
+      x: 30 + Math.random() * 40,
+      dur: 1.6 + Math.random() * 1.2,
+      delay: Math.random() * 0.4,
+      big: Math.random() > 0.7,
+    }));
+    setHearts((prev) => [...prev.slice(-40), ...batch]);
+    setTimeout(() => {
+      setHearts((prev) => prev.filter((h) => !batch.some((b) => b.id === h.id)));
+    }, 3200);
+  }, []);
 
   const loadLocalPlaylist = useCallback(async () => {
     if (!window.cupid?.getLocalPlaylist) return;
@@ -356,6 +500,7 @@ export default function App() {
   }, []);
 
   const { theme, toggleTheme, assets } = useTheme();
+  const glowPulse = usePulsingGlow(isPlaying, volume);
 
   const [recordFrame, setRecordFrame] = useState(0);
   const [needleFrame, setNeedleFrame] = useState(0);
@@ -436,6 +581,7 @@ export default function App() {
     if (wasInitialOrPlaceholder) return;
     if (needleLifted) return;
 
+    spawnHearts();
     setNeedleLifted(true);
     setNeedleChangeFrame(0);
 
@@ -466,13 +612,41 @@ export default function App() {
   const resizeBL = useResize('bottom-left');
   const resizeBR = useResize('bottom-right');
 
+  const handleTogglePlay = useCallback(() => {
+    const wasPlaying = isPlaying;
+    togglePlay();
+    if (!wasPlaying) spawnHearts();
+  }, [isPlaying, togglePlay, spawnHearts]);
+
   return (
     <div className={`player ${theme === 'blue' ? 'theme-blue' : ''}`}>
+      {/* Rain background (behind everything) */}
+      <RainBackground
+        intensity={isPlaying ? 0.4 + volume * 0.6 : 0.2}
+        flash={glowPulse === 1}
+      />
+
+      {/* Welcome message */}
+      {welcomeVisible && (
+        <div className="welcome-overlay">
+          <div className="welcome-text">
+            <span className="welcome-line1">hecho con ♥</span>
+            <span className="welcome-line2">para Lory</span>
+          </div>
+        </div>
+      )}
+
+      {/* Floating hearts */}
+      <FloatingHearts hearts={hearts} />
+
+      {/* Record glow (pulses with the beat) */}
+      <div className={`record-glow ${glowPulse === 1 ? 'on' : ''}`} aria-hidden="true" />
+
       {/* Base frame */}
       <img src={assets.frame} className="layer" alt="" draggable={false} />
 
       {/* Window title */}
-      <div className="window-title">cupid player</div>
+      <div className="window-title">lory's music</div>
 
       {/* Record player centered in frame */}
       <img src={assets.recordPlayer} className="record-player" alt="" draggable={false} />
@@ -501,7 +675,7 @@ export default function App() {
       <img src={assets.frameNoBg} className="layer frame-overlay" alt="" draggable={false} />
 
       {/* Decorative */}
-      <img src={assets.plant} className="layer layer-ui" alt="" draggable={false} />
+      <img src={assets.plant} className="layer layer-ui plant" alt="" draggable={false} />
 
       {/* Progress bar layers */}
       <img src={assets.progressBar} className="layer layer-ui" alt="" draggable={false} />
@@ -625,7 +799,7 @@ export default function App() {
 
       {/* Playback control click targets */}
       <div className="btn btn-prev" onClick={prev} />
-      <div className="btn btn-play" onClick={togglePlay} />
+      <div className="btn btn-play" onClick={handleTogglePlay} />
       <div className="btn btn-next" onClick={next} />
 
       {/* Volume bar layers — shown on hover or drag */}
