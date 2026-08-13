@@ -170,6 +170,13 @@ The macOS app is built in the cloud by GitHub Actions (you can't build it from W
 > The app is unsigned (no Apple Developer certificate), so the first time you open it macOS will refuse. To allow it:
 > **right-click the app → Open → Open** (click *Open* in the dialog). You only need to do this once.
 
+**The downloaded app does NOT include the music files.** Because the MP3s are kept out of the repository, you have to copy them in once:
+
+1. Open the app once (so it creates its data folder), then quit it.
+2. Open the folder `~/Library/Application Support/Lory's Music/audio/` (in Finder press `Cmd+Shift+G` and paste that path).
+3. Copy your `.mp3` files there (filenames must match the `file` values in `playlist.json`, which is already seeded in that same folder).
+4. Reopen the app — your songs are now in the playlist.
+
 **Windows:** Run the installer from `out/Lory's Music Setup.exe`. If `npm run package` fails at the NSIS step with "Cannot create symbolic link," enable **Developer Mode** in Settings → System → For developers, then re-run. The unpacked app at `out/win-unpacked/Lory's Music.exe` is fully runnable in the meantime — no installer required.
 
 **Linux:** Run the AppImage from `out/`.
