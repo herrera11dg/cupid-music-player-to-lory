@@ -1,6 +1,12 @@
-# cupid music player
+# Lory's Music
 
-A pixel-art desktop music player built with Electron, Vite, and React.
+A pixel-art desktop music player built with Electron, Vite, and React — a small, personalized version made with love as a gift.
+
+> **❤️ All the credit for the original design and code goes to Cupidity ([@cupidbity](https://github.com/cupidbity))**
+> and to her [cupid-music-player](https://github.com/cupidbity/cupid-music-player), the project this is based on.
+> Thank you, Cupidity, for creating such a beautiful little player! 🎶
+>
+> `#cupidbity` `#Cupidity` `#cupidmusicplayer` `#pixelart` `#lorysmusic` `#madebyme`
 
 ## Features
 
@@ -21,7 +27,7 @@ You only need 4 commands. Copy them one at a time:
 
 ```bash
 # 1. Download the code
-git clone https://github.com/cupidbity/cupid-music-player.git
+git clone https://github.com/herrera11dg/cupid-music-player.git
 
 # 2. Step INTO the folder you just downloaded (this step is required!)
 cd cupid-music-player
@@ -151,18 +157,23 @@ See [YOUTUBE_SETUP.md](YOUTUBE_SETUP.md) for detailed instructions and troublesh
 npm run package
 ```
 
-### Install as Desktop App
+## Install as Desktop App
 
-**macOS:**
-```bash
-cp -r "out/mac-arm64/Lory's Music.app" /Applications/
-```
+**macOS (easiest — no programming needed):**
+
+The macOS app is built in the cloud by GitHub Actions (you can't build it from Windows). To get it:
+
+1. Go to the repository **Actions** tab → select the **"Build macOS app"** workflow on the left.
+2. Click **Run workflow** → **Run workflow** (or just wait — it also runs automatically on every push to `main`).
+3. Wait a couple of minutes for the job to finish, then open the job and scroll to the bottom: in **Artifacts**, download **`Lorys-Music-macOS`** (a zip containing `Lorys-Music-macOS-arm64.zip` for Apple Silicon M1/M2/M3/M4 and `Lorys-Music-macOS-x64.zip` for Intel Macs).
+4. Unzip and drag `Lory's Music.app` into your **Applications** folder.
+
+> The app is unsigned (no Apple Developer certificate), so the first time you open it macOS will refuse. To allow it:
+> **right-click the app → Open → Open** (click *Open* in the dialog). You only need to do this once.
 
 **Windows:** Run the installer from `out/Lory's Music Setup.exe`. If `npm run package` fails at the NSIS step with "Cannot create symbolic link," enable **Developer Mode** in Settings → System → For developers, then re-run. The unpacked app at `out/win-unpacked/Lory's Music.exe` is fully runnable in the meantime — no installer required.
 
 **Linux:** Run the AppImage from `out/`.
-
-> Note: The macOS build is unsigned. On first launch you may need to right-click > Open, or go to System Settings > Privacy & Security to allow it.
 
 ## Tech Stack
 
