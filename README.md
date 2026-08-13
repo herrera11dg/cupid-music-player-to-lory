@@ -27,7 +27,7 @@ You only need 4 commands. Copy them one at a time:
 
 ```bash
 # 1. Download the code
-git clone https://github.com/herrera11dg/cupid-music-player.git
+git clone https://github.com/herrera11dg/cupid-music-player-to-lory.git
 
 # 2. Step INTO the folder you just downloaded (this step is required!)
 cd cupid-music-player
